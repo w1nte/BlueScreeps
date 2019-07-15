@@ -64,7 +64,7 @@ typings/
 
 !vendor/prism.js
 vendor/
-dist/
+!dist/vendor
 css/app.css
 css/app.min.css
 css/app.min.css.map
