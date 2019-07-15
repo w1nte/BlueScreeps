@@ -1,3 +1,6 @@
+import {Instance} from "./instance.js";
+import {Camera} from "./camera.js";
+
 const MODE_DEFAULT = 0, MODE_DRAGGING = 1, MODE_MOVING = 2;
 
 class Editor {
@@ -7,19 +10,55 @@ class Editor {
             console.error("Argument app must be an PIXI.Application!");
         } else {
             options = Object.assign({
-                grid_size: 50,
+                grid_box_size: 32,
+                stage: new PIXI.Container(),
+                posX: app.renderer.width / 2,
+                posY: app.renderer.height / 2
             }, options);
 
             this.app = app;
-            this.stage = new PIXI.Container();
+            this.stage = options.stage;
+            this.stage.position.x = options.posX;
+            this.stage.position.y += options.posY;
+
+            this.GRID_BOX_SIZE = options.grid_box_size;
+
             this.app.stage.addChild(this.stage);
-
-            this.GRID_SIZE = options.grid_size;
-            this.GRID_BOX_SIZE = 32;
-
             this.instances = [];
-
             this.mode = 0;
+
+
+            // coordinates
+            let coordinates = new PIXI.Text('', {fontFamily: 'Arial', fontSize: 11, fill: 0xFFFFFF, align: 'left'});
+            coordinates.position.x = 10;
+            coordinates.position.y = 10;
+            app.stage.addChild(coordinates);
+
+            // cursor
+            let buildBlock = new PIXI.Graphics();
+            buildBlock.beginFill(0xFFFFFF, 0.1);
+            buildBlock.drawRect(0, 0, this.GRID_BOX_SIZE, this.GRID_BOX_SIZE);
+            this.stage.addChild(buildBlock);
+
+            let self = this;
+            app.renderer.plugins.interaction.on("mousemove", function(e) {
+                let {x, y} = self.getGridPos(self.stage.toLocal(e.data.global).x, self.stage.toLocal(e.data.global).y);
+                buildBlock.position.x = x;
+                buildBlock.position.y = y;
+                coordinates.text = "X: " + x / self.GRID_BOX_SIZE + " Y: " + y / self.GRID_BOX_SIZE;
+            });
+
+            // zero line
+            let line = new PIXI.Graphics();
+            line.lineStyle(2, 0x888888, 1);
+            line.moveTo(this.GRID_BOX_SIZE / 2, -10000);
+            line.lineTo(this.GRID_BOX_SIZE / 2, 10000);
+            line.moveTo(-10000, this.GRID_BOX_SIZE / 2);
+            line.lineTo(10000, this.GRID_BOX_SIZE / 2);
+            this.stage.addChild(line);
+
+            // camera
+            let camera = new Camera(this.app, this.stage);
         }
     }
 
@@ -43,16 +82,8 @@ class Editor {
     getGridPos(posX, posY) {
         posX = Math.floor(posX / this.GRID_BOX_SIZE) * this.GRID_BOX_SIZE;
         posY = Math.floor(posY / this.GRID_BOX_SIZE) * this.GRID_BOX_SIZE;
-        if (posX < 0)
-            posX = 0;
-        if (posX > this.GRID_SIZE * this.GRID_BOX_SIZE)
-            posX = (this.GRID_SIZE - 1) * this.GRID_BOX_SIZE;
-        if (posY < 0)
-            posY = 0;
-        if (posY > this.GRID_SIZE * this.GRID_BOX_SIZE)
-            posY = (this.GRID_SIZE - 1) * this.GRID_BOX_SIZE;
         return {x: posX,
-                y: posY };
+            y: posY };
     }
 
     isInMode() {
@@ -61,71 +92,4 @@ class Editor {
 
 }
 
-class Instance extends PIXI.Sprite {
-
-    constructor(editor, texture) {
-        super(texture);
-
-        if (!editor instanceof Editor)
-            console.error("Argument editor must be an Editor!");
-
-        this.editor = editor;
-
-        this.interactive = true;
-        this
-            .on('onload', this.onDragStart)
-            // events for drag start
-            .on('mousedown', this.onDragStart)
-            .on('touchstart', this.onDragStart)
-            // events for drag end
-            .on('mouseup', this.onDragEnd)
-            .on('mouseupoutside', this.onDragEnd)
-            .on('touchend', this.onDragEnd)
-            .on('touchendoutside', this.onDragEnd)
-            // events for drag move
-            .on('mousemove', this.onDragMove)
-            .on('touchmove', this.onDragMove)
-            .on('rightclick', (e) => {
-                this.editor.remove(this);
-            });
-    }
-
-    onDragStart(e) {
-        e.stopPropagation();
-        this.data = e.data;
-        this.dragging = true;
-        this.alpha = 0.5;
-        this.editor.mode = MODE_DRAGGING;
-        this.posOld = {x: this.position.x, y: this.position.y };
-    }
-
-    onDragMove(e) {
-        if (this.dragging) {
-            let newPosition = this.data.getLocalPosition(this.parent);
-            let {x, y} = this.editor.getGridPos(newPosition.x, newPosition.y);
-
-            this.position.x = x;
-            this.position.y = y;
-        }
-    }
-
-    onDragEnd(e) {
-        this.data = null;
-        this.dragging = false;
-        this.alpha = 1;
-        this.editor.mode = MODE_DEFAULT;
-
-        for (let i in this.editor.instances) {
-            let instance = this.editor.instances[i];
-            if (instance !== this && instance.position.x === this.position.x && instance.position.y === this.position.y) {
-                this.position.x = this.posOld.x;
-                this.position.y = this.posOld.y;
-                break;
-            }
-        }
-
-    }
-
-}
-
-export {Editor, Instance};
+export {Editor, MODE_DEFAULT, MODE_DRAGGING, MODE_MOVING};

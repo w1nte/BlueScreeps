@@ -8,8 +8,6 @@ var gulp             = require('gulp'),
     taskTime         = require('gulp-total-task-time'),
     stripCssComments = require('gulp-strip-css-comments'),
     cssbeautify      = require('gulp-cssbeautify'),
-    header           = require('gulp-header'),
-    watch            = require('gulp-watch'),
     htmlmin          = require('gulp-htmlmin'),
     jsmin            = require('gulp-uglify');
 
@@ -22,6 +20,7 @@ gulp.task('install', function() {
     gulp.src([
         'node_modules/pixi.js/dist/pixi.js',
         'node_modules/pixi.js/dist/pixi.min.js',
+        'node_modules/normalize.css/normalize.css',
     ]).pipe(gulp.dest('vendor/'))
 });
 
@@ -71,8 +70,8 @@ gulp.task('build', ['clean', 'install', 'scss-dist'], function() {
         .pipe(gulp.dest('dist/js'));
     // just copying
     gulp.src([
-        'css/**/*',
-        'img/**/*',
+        'assets/**/*',
+        '!assets/**/*.psd',
         '.htaccess',
         'browserconfig.xml',
         'favicon.ico',
@@ -80,7 +79,9 @@ gulp.task('build', ['clean', 'install', 'scss-dist'], function() {
         '*.png',
         'robots.txt',
         'site.webmanifest',
-        '!**/*/*.map'
+        '!**/*/*.map',
+        'vendor/**/*.js',
+        'css/**/*.css'
     ], {base:'.'})
         .pipe(gulp.dest('dist'))
 });

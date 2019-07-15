@@ -1,48 +1,85 @@
+'use strict';
+
+import {Editor} from "./editor.js";
+import * as Constructions from "./constructions.js";
+
+
 const app = new PIXI.Application({
-    width: 800, height: 600, backgroundColor: 0xAAAAAA, resolution: window.devicePixelRatio || 1,
+    width: 1200, height: 800, backgroundColor: 0x2b2b2b, resolution: window.devicePixelRatio || 1,
 });
-document.body.appendChild(app.view);
+document.getElementById("canvas").appendChild(app.view);
+app.view.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
 
-let constructions = [];
-
-
-
-const grid_size = 32;
-
+const editor = new Editor(app);
 
 
-class Construction {
-    constructor(x, y) {
-        this.sprite = new PIXI.Sprite.from('assets/test.png');
-        this.sprite.position.x = x;
-        this.sprite.position.y = y;
 
-        constructions.push(this);
-        app.stage.addChild(this.sprite);
-    }
+let selected = Constructions.Road;
+document.getElementById('extensionButton').onclick = (e) => {
+    selected = Constructions.Extension;
+};
 
+document.getElementById('roadButton').onclick = (e) => {
+    selected = Constructions.Road;
+};
 
-}
 
 app.stage.interactive = true;
-app.renderer.plugins.interaction.on("pointerdown", function(e){
-    let mouse_x = Math.floor(app.renderer.plugins.interaction.mouse.global.x / grid_size) * grid_size,
-        mouse_y = Math.floor(app.renderer.plugins.interaction.mouse.global.y / grid_size) * grid_size;
+app.renderer.plugins.interaction.on("mousedown", function(e) {
+    if (!editor.isInMode()) {
+        let click = e.data.originalEvent.which;
+        if (click === 1) {
+            let mouse_grid_x = Math.floor(editor.stage.toLocal(app.renderer.plugins.interaction.mouse.global).x / editor.GRID_BOX_SIZE) * editor.GRID_BOX_SIZE,
+                mouse_grid_y = Math.floor(editor.stage.toLocal(app.renderer.plugins.interaction.mouse.global).y / editor.GRID_BOX_SIZE) * editor.GRID_BOX_SIZE;
 
-    console.log("add");
-    new Construction(mouse_x, mouse_y);
-});
-
-app.ticker.add((delta) => {
-
-
-    for (let c in constructions) {
-        let construct = constructions[c];
-
+            let c = new selected(editor);
+            c.position.x = mouse_grid_x;
+            c.position.y = mouse_grid_y;
+            editor.add(c);
+            //c.onDragStart(e);
+        }
     }
 });
 
-let text = "hello world";
 let downloadButton = document.getElementById('downloadButton');
-downloadButton.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-downloadButton.setAttribute('download', 'room.txt');
+downloadButton.onclick = (e) => {
+    e.stopPropagation();
+
+    let content = "let blueprint = [";
+    let breakAfter = 5;
+
+    for (let i in editor.instances) {
+        let construct = editor.instances[i];
+        if (construct instanceof Constructions.Construction) {
+            if (i % breakAfter === 0 && parseInt(i) !== 0 && parseInt(i) !== editor.instances.length-1)
+                content += "\r\n";
+            let {x, y} = editor.getGridPos(construct.position.x, construct.position.y);
+            content += "[" + construct.type + ", " + x / editor.GRID_BOX_SIZE + ", " + y / editor.GRID_BOX_SIZE + "], ";
+        }
+    }
+    if (editor.instances.length > 0)
+        content = content.slice(0, content.length - 2);
+    content += "];\r\n\r\nmodule.exports = {blueprint};";
+
+    let code = document.getElementById('code');
+    code.innerHTML = content;
+    Prism.highlightElement(code);
+
+    //downloadButton.setAttribute('href', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(content));
+    //downloadButton.setAttribute('download', 'room.txt');
+};
+
+let clearButton = document.getElementById('clearButton');
+clearButton.onclick = (e) => {
+    e.stopPropagation();
+
+    let instances = editor.instances.slice();
+    for (let i = 0; i < instances.length; i++) {
+        let construct = instances[i];
+        editor.remove(construct);
+    }
+
+};
+

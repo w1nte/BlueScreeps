@@ -2,12 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Screeps Roombuilder</title>
+    <title>BlueScreeps</title>
+    <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
+    <link href="css/prism.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
 </head>
 <body>
 
-<a id="downloadButton">Download</a>
+<div class="wrapper bg-gradient">
+    <div class="content">
 
+        <header class="page-header">
+            <a href=""><img class="logo" src="assets/logo.png" alt="BlueScreeps"></a>
+            <a class="github-link" href="">Github</a>
+        </header>
+
+        <main>
+
+            <div class="editor">
+                <div id="canvas"></div>
+                <div class="gui">
+                    <h3>Choose Construction:</h3>
+                    <div id="gui-selection">
+                    </div>
+                    <div class="button downloadButton"><a href="#" id="downloadButton">Generate Code</a></div>
+                </div>
+            </div>
+
+            <a href="#" class="button" id="clearButton">Löschen</a>
+        </main>
+
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="content">
+
+        <main>
+            <pre><code id="code" class="language-javascript"></code></pre>
+        </main>
+
+    </div>
+</div>
+
+
+<script src="vendor/prism.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
 <script src="js/main.js" type="module"></script>
 </body>

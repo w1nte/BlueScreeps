@@ -62,4 +62,10 @@ typings/
 # next.js build output
 .next
 
+!vendor/prism.js
 vendor/
+dist/
+css/app.css
+css/app.min.css
+css/app.min.css.map
+*.psd
