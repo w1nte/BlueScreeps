@@ -1,12 +1,12 @@
 {
-  "name": "ScreepsBuilder",
+  "name": "screepsbuilder",
   "version": "1.0.0",
   "dependencies": {
     "pixi.js": "^5.0.4"
   },
   "devDependencies": {
-    "del": "^5.0.0",
-    "gulp": "^4.0.2",
+    "del": "^4.1.1",
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^6.1.0",
     "gulp-cssbeautify": "^1.0.1",
     "gulp-cssmin": "^0.2.0",
@@ -25,6 +25,12 @@
     "watch": "gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "maintained node versions",
+    "not dead"
+  ],
   "author": "w1nte",
   "license": "MIT"
 }

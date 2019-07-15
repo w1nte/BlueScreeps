@@ -1,21 +1,24 @@
-var gulp             = require('gulp'),
-    sass             = require('gulp-sass'),
-    autoprefixer     = require('gulp-autoprefixer'),
-    sourcemaps       = require('gulp-sourcemaps'),
-    cssmin           = require('gulp-cssmin'),
-    rename           = require('gulp-rename'),
-    del              = require('del'),
-    taskTime         = require('gulp-total-task-time'),
-    stripCssComments = require('gulp-strip-css-comments'),
-    cssbeautify      = require('gulp-cssbeautify'),
-    htmlmin          = require('gulp-htmlmin'),
-    jsmin            = require('gulp-uglify');
+'use strict';
+
+const   gulp             = require('gulp'),
+        sass             = require('gulp-sass'),
+        autoprefixer     = require('gulp-autoprefixer'),
+        sourcemaps       = require('gulp-sourcemaps'),
+        cssmin           = require('gulp-cssmin'),
+        rename           = require('gulp-rename'),
+        del              = require('del'),
+        taskTime         = require('gulp-total-task-time'),
+        stripCssComments = require('gulp-strip-css-comments'),
+        cssbeautify      = require('gulp-cssbeautify'),
+        htmlmin          = require('gulp-htmlmin'),
+        jsmin            = require('gulp-uglify');
 
 /* Record total task time */
 taskTime.init();
 
+
 /* install all relevant node_modules files */
-gulp.task('install', function() {
+gulp.task('install', () => {
     // .js
     gulp.src([
         'node_modules/pixi.js/dist/pixi.js',
@@ -25,16 +28,13 @@ gulp.task('install', function() {
 });
 
 /* Compile SCSS, Autoprefix, Stripcomments, Beautify, Minify. */
-gulp.task('scss-dist', function() {
+gulp.task('scss-dist', () => {
     return gulp.src('scss/app.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'expanded'
         }).on('error', sass.logError))
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        }))
+        .pipe(autoprefixer())
         .pipe(stripCssComments({
             preserve: false
         }))
@@ -49,24 +49,24 @@ gulp.task('scss-dist', function() {
 });
 
 /* Watch files, clean and rebuild SCSS on change */
-gulp.task('watchscss', function() {
+gulp.task('watchscss', () => {
     gulp.watch('scss/**/*', ['scss-dist']);
 });
 
 /* Delete the build directory */
-gulp.task('clean', function() {
+gulp.task('clean', () => {
     return del(['dist']);
 });
 
 /* Run all important tasks and copy the files into the dist directory */
-gulp.task('build', ['clean', 'install', 'scss-dist'], function() {
+gulp.task('build', ['clean', 'install', 'scss-dist'], () => {
     // minify and copy html
     gulp.src(['./*.html'])
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('dist'));
     // minify and copy js
     gulp.src(['js/**/*'])
-        //.pipe(jsmin())
+    //.pipe(jsmin())
         .pipe(gulp.dest('dist/js'));
     // just copying
     gulp.src([
