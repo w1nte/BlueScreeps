@@ -13,19 +13,16 @@ class Extension extends Construction {
         super(editor, PIXI.Texture.from("assets/extension.png"));
         this.type = "STRUCTURE_EXTENSION";
         this.name = "Extension";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 32;
+        this.sprite.width = 32;
     }
 }
 
 class Road extends Construction {
     constructor(editor) {
-        super(editor, PIXI.Texture.from("assets/road.png"));
+        super(editor);
         this.type = "STRUCTURE_ROAD";
         this.name = "Road";
-        this.height = 16;
-        this.width = 16;
-        this.anchor.set(-0.5);
     }
 }
 
@@ -34,8 +31,8 @@ class Lab extends Construction {
         super(editor, PIXI.Texture.from("assets/lab.png"));
         this.type = "STRUCTURE_LAB";
         this.name = "Lab";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 32;
+        this.sprite.width = 32;
     }
 }
 
@@ -44,8 +41,8 @@ class Link extends Construction {
         super(editor, PIXI.Texture.from("assets/link.png"));
         this.type = "STRUCTURE_LINK";
         this.name = "Link";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 32;
+        this.sprite.width = 32;
     }
 }
 
@@ -54,8 +51,9 @@ class Spawn extends Construction {
         super(editor, PIXI.Texture.from("assets/spawn.png"));
         this.type = "STRUCTURE_SPAWN";
         this.name = "Spawn";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 45;
+        this.sprite.width = 45;
+        this.sprite.anchor.set(0.18);
     }
 }
 
@@ -64,8 +62,9 @@ class Storage extends Construction {
         super(editor, PIXI.Texture.from("assets/storage.png"));
         this.type = "STRUCTURE_STORAGE";
         this.name = "Storage";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.anchor.set(0.1, 0.15);
+        this.sprite.scale.x = 0.8;
+        this.sprite.scale.y = 0.8;
     }
 }
 
@@ -74,8 +73,8 @@ class Terminal extends Construction {
         super(editor, PIXI.Texture.from("assets/terminal.png"));
         this.type = "STRUCTURE_TERMINAL";
         this.name = "Terminal";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 32;
+        this.sprite.width = 32;
     }
 }
 
@@ -84,18 +83,19 @@ class Tower extends Construction {
         super(editor, PIXI.Texture.from("assets/tower.png"));
         this.type = "STRUCTURE_TOWER";
         this.name = "Tower";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.anchor.set(-0.02, 0);
+        this.sprite.scale.x = 0.6;
+        this.sprite.scale.y = 0.6;
     }
 }
 
 class Wall extends Construction {
     constructor(editor) {
-        super(editor, PIXI.Texture.from("assets/wall.png"));
+        super(editor);
         this.type = "STRUCTURE_WALL";
         this.name = "Wall";
-        this.height = 32;
-        this.width = 32;
+        this.sprite.height = 32;
+        this.sprite.width = 32;
     }
 }
 

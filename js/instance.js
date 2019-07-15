@@ -1,16 +1,21 @@
 import {MODE_DRAGGING, MODE_MOVING, MODE_DEFAULT, Editor} from "./editor.js";
 
-class Instance extends PIXI.Sprite {
+class Instance extends PIXI.Graphics {
 
     constructor(editor, texture) {
-        super(texture);
+        super();
 
         if (!editor instanceof Editor)
             console.error("Argument editor must be an Editor!");
 
+        this.hitArea = new PIXI.Rectangle(0, 0, editor.GRID_BOX_SIZE, editor.GRID_BOX_SIZE);
+        this.sprite = new PIXI.Sprite(texture);
+        this.addChild(this.sprite);
+
         this.editor = editor;
 
         this.interactive = true;
+        this.cursor = 'pointer';
         this
             .on('onload', this.onDragStart)
             // events for drag start
@@ -25,7 +30,7 @@ class Instance extends PIXI.Sprite {
             .on('mousemove', this.onDragMove)
             .on('touchmove', this.onDragMove)
             .on('rightclick', (e) => {
-                this.editor.remove(this);
+                editor.remove(this);
             });
     }
 
@@ -36,6 +41,7 @@ class Instance extends PIXI.Sprite {
         this.alpha = 0.5;
         this.editor.mode = MODE_DRAGGING;
         this.posOld = {x: this.position.x, y: this.position.y};
+        this.posTemp = {x: this.position.x, y: this.position.y};
     }
 
     onDragMove(e) {
@@ -45,6 +51,12 @@ class Instance extends PIXI.Sprite {
 
             this.position.x = x;
             this.position.y = y;
+
+            if (this.posTemp.x !== x || this.posTemp.y !== y) {
+                this.posTemp = {x: x, y: y};
+                this.editor.emit("update");
+            }
+
         }
     }
 
@@ -62,6 +74,7 @@ class Instance extends PIXI.Sprite {
                 break;
             }
         }
+        this.editor.emit("update");
 
     }
 

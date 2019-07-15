@@ -3,9 +3,11 @@ import {Camera} from "./camera.js";
 
 const MODE_DEFAULT = 0, MODE_DRAGGING = 1, MODE_MOVING = 2;
 
-class Editor {
+class Editor extends PIXI.utils.EventEmitter {
 
     constructor(app, options) {
+        super();
+
         if (!app instanceof PIXI.Application) {
             console.error("Argument app must be an PIXI.Application!");
         } else {
@@ -27,9 +29,14 @@ class Editor {
             this.instances = [];
             this.mode = 0;
 
+            // background
+            let tiling_size = 100000;
+            let tiling = new PIXI.TilingSprite(PIXI.Texture.from("./assets/bg.jpg"), tiling_size, tiling_size);
+            tiling.position.set(-tiling_size / 2, -tiling_size / 2);
+            this.stage.addChild(tiling);
 
             // coordinates
-            let coordinates = new PIXI.Text('', {fontFamily: 'Arial', fontSize: 11, fill: 0xFFFFFF, align: 'left'});
+            let coordinates = new PIXI.Text('', {fontFamily: 'Yanone Kaffeesatz, Arial', fontSize: 13, fill: 0xFFFFFF, align: 'left'});
             coordinates.position.x = 10;
             coordinates.position.y = 10;
             app.stage.addChild(coordinates);
