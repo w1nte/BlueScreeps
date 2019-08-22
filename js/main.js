@@ -1,15 +1,19 @@
 'use strict';
 
 import {Editor} from "./editor.js";
-import * as Constructions from "./CONSTRUCTIONS.js";
+import * as Constructions from "./constructions.js";
 import {CodeFactory} from "./codeFactory.js";
 import {RoadDrawer} from "./roadDrawer.js";
 import {EditorGUI} from "./editorGUI.js";
+import {FileManager} from "./codeFactory.js";
 
 const canvas = document.getElementById("canvas");
-const generateCodeButton = document.getElementById('downloadButton');
+const generateCodeButton = document.getElementById('generateCodeButton');
 const removeAllButton = document.getElementById('clearButton');
 const code = document.getElementById('code');
+const shareButton = document.getElementById('shareButton');
+const loadButton = document.getElementById('loadButton');
+const shareTextBox = document.getElementById('shareTextBox');
 
 const main = () => {
 
@@ -40,6 +44,8 @@ const main = () => {
         e.preventDefault();
     });
 
+    window.onload = (e) => updateCode();
+
     generateCodeButton.onclick = (e) => {
         e.stopPropagation();
         updateCode();
@@ -50,9 +56,39 @@ const main = () => {
         editor.removeAll();
     };
 
-    window.onload = (e) => updateCode();
+    editor.on('update', () => {
+        roadDrawer.draw();
+    });
 
-    editor.on('update', () => roadDrawer.draw());
+    loadButton.onclick = (e) => {
+        e.stopPropagation();
+        editor.removeAll();
+        let unserializedData = FileManager.unserialize(editor, code.innerText);
+        for (let i in unserializedData) {
+            editor.add(unserializedData[i]);
+        }
+    };
+
+    shareButton.onclick = (e) => {
+        e.preventDefault();
+        shareTextBox.style.visibility = 'visible';
+        shareTextBox.value = location.protocol + '//' + location.host + location.pathname + '?code=' + btoa(CodeFactory.generate(editor));
+        shareTextBox.select();
+        document.execCommand("copy");
+    };
+
+    let unserializedData = FileManager.unserialize(editor, "[STRUCTURE_SPAWN, 0, 0], [STRUCTURE_ROAD, 1, 0], [STRUCTURE_ROAD, 0, -1], [STRUCTURE_ROAD, -1, 0], [STRUCTURE_ROAD, 0, 1]," +
+        "[STRUCTURE_ROAD, 1, 1], [STRUCTURE_ROAD, 1, -1], [STRUCTURE_ROAD, -1, -1], [STRUCTURE_ROAD, -1, 1]");
+
+    let url = new URL(window.location.href);
+    let urlcode = url.searchParams.get("code");
+    if (urlcode != null) {
+        unserializedData = FileManager.unserialize(editor, atob(urlcode));
+    }
+
+    for (let i in unserializedData) {
+        editor.add(unserializedData[i]);
+    }
 
 };
 

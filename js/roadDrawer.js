@@ -1,4 +1,4 @@
-import * as Constructions from "./CONSTRUCTIONS.js";
+import * as Constructions from "./constructions.js";
 
 class RoadDrawer {
 

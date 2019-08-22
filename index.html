@@ -25,11 +25,14 @@
                     <h3>Choose Construction:</h3>
                     <div id="gui-selection">
                     </div>
-                    <div class="button downloadButton"><a href="#" id="downloadButton">Generate Code</a></div>
+                    <div class="button downloadButton"><a href="#" id="generateCodeButton">Generate Code</a></div>
                 </div>
             </div>
 
-            <a href="#" class="button" id="clearButton">Löschen</a>
+            <a href="#" class="button" id="clearButton">Alles löschen</a> |
+            <a href="#" class="button" id="loadButton">Laden</a> |
+            <a href="#" class="button" id="shareButton">Share</a>
+            <input type="text" style="border-sizing: border-box; visibility: hidden; display: inline-block; width: 100%; background-color: black; color: white; padding: 1rem; border-radius: 3px; border: none; margin: 1rem -1rem;" id="shareTextBox"/>
         </main>
 
     </div>
@@ -39,7 +42,7 @@
     <div class="content">
 
         <main>
-            <pre><code id="code" class="language-javascript"></code></pre>
+            <pre><code contenteditable="true" id="code" class="language-javascript"></code></pre>
         </main>
 
         <footer>

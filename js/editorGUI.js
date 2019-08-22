@@ -1,7 +1,5 @@
 "use strict";
 
-import * as Constructions from "./CONSTRUCTIONS.js";
-
 class EditorGUI {
     constructor(app, editor) {
         this.app = app;

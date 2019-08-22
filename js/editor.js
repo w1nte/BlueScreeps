@@ -57,7 +57,7 @@ class Editor extends PIXI.utils.EventEmitter {
 
             // zero line
             let line = new PIXI.Graphics();
-            line.lineStyle(2, 0x888888, 1);
+            line.lineStyle(2, 0x888888, 0.2);
             line.moveTo(this.GRID_BOX_SIZE / 2, -10000);
             line.lineTo(this.GRID_BOX_SIZE / 2, 10000);
             line.moveTo(-10000, this.GRID_BOX_SIZE / 2);
