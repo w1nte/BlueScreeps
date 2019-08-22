@@ -1,35 +1,40 @@
 import {Instance} from "./instance.js";
 
 class Construction extends Instance {
+    static type = "";
+
     constructor(editor, texture) {
         super(editor, texture);
-        this.type = "";
         this.name = "default";
     }
 }
 
 class Extension extends Construction {
+    static type = "STRUCTURE_EXTENSION";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/extension.png"));
-        this.type = "STRUCTURE_EXTENSION";
         this.name = "Extension";
-        this.sprite.height = 32;
-        this.sprite.width = 32;
+        this.sprite.anchor.set(-0.19);
+        this.sprite.scale.x = 0.37;
+        this.sprite.scale.y = 0.37;
     }
 }
 
 class Road extends Construction {
+    static type = "STRUCTURE_ROAD";
+
     constructor(editor) {
         super(editor);
-        this.type = "STRUCTURE_ROAD";
         this.name = "Road";
     }
 }
 
 class Lab extends Construction {
+    static type = "STRUCTURE_LAB";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/lab.png"));
-        this.type = "STRUCTURE_LAB";
         this.name = "Lab";
         this.sprite.height = 32;
         this.sprite.width = 32;
@@ -37,9 +42,10 @@ class Lab extends Construction {
 }
 
 class Link extends Construction {
+    static type = "STRUCTURE_LINK";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/link.png"));
-        this.type = "STRUCTURE_LINK";
         this.name = "Link";
         this.sprite.height = 32;
         this.sprite.width = 32;
@@ -47,9 +53,10 @@ class Link extends Construction {
 }
 
 class Spawn extends Construction {
+    static type = "STRUCTURE_SPAWN";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/spawn.png"));
-        this.type = "STRUCTURE_SPAWN";
         this.name = "Spawn";
         this.sprite.height = 45;
         this.sprite.width = 45;
@@ -58,9 +65,10 @@ class Spawn extends Construction {
 }
 
 class Storage extends Construction {
+    static type = "STRUCTURE_STORAGE";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/storage.png"));
-        this.type = "STRUCTURE_STORAGE";
         this.name = "Storage";
         this.sprite.anchor.set(0.1, 0.15);
         this.sprite.scale.x = 0.8;
@@ -69,9 +77,10 @@ class Storage extends Construction {
 }
 
 class Terminal extends Construction {
+    static type = "STRUCTURE_TERMINAL";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/terminal.png"));
-        this.type = "STRUCTURE_TERMINAL";
         this.name = "Terminal";
         this.sprite.height = 32;
         this.sprite.width = 32;
@@ -79,9 +88,10 @@ class Terminal extends Construction {
 }
 
 class Tower extends Construction {
+    static type = "STRUCTURE_TOWER";
+
     constructor(editor) {
         super(editor, PIXI.Texture.from("assets/tower.png"));
-        this.type = "STRUCTURE_TOWER";
         this.name = "Tower";
         this.sprite.anchor.set(-0.02, 0);
         this.sprite.scale.x = 0.6;
@@ -90,13 +100,26 @@ class Tower extends Construction {
 }
 
 class Wall extends Construction {
+    static type = "STRUCTURE_WALL";
+
     constructor(editor) {
         super(editor);
-        this.type = "STRUCTURE_WALL";
         this.name = "Wall";
         this.sprite.height = 32;
         this.sprite.width = 32;
     }
 }
 
-export{Construction, Extension, Road, Lab, Link, Spawn, Storage, Terminal, Tower, Wall};
+const CONSTRUCTIONS = [
+    Road,
+    Extension,
+    Wall,
+    Tower,
+    Terminal,
+    Storage,
+    Spawn,
+    Link,
+    Lab
+];
+
+export{CONSTRUCTIONS, Construction, Extension, Road, Lab, Link, Spawn, Storage, Terminal, Tower, Wall};
