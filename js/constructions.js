@@ -13,8 +13,9 @@ class Extension extends Construction {
         super(editor, PIXI.Texture.from("assets/extension.png"));
         this.type = "STRUCTURE_EXTENSION";
         this.name = "Extension";
-        this.sprite.height = 32;
-        this.sprite.width = 32;
+        this.sprite.anchor.set(-0.19);
+        this.sprite.scale.x = 0.37;
+        this.sprite.scale.y = 0.37;
     }
 }
 
@@ -99,4 +100,16 @@ class Wall extends Construction {
     }
 }
 
-export{Construction, Extension, Road, Lab, Link, Spawn, Storage, Terminal, Tower, Wall};
+const CONSTRUCTIONS = [
+    Road,
+    Extension,
+    Wall,
+    Tower,
+    Terminal,
+    Storage,
+    Spawn,
+    Link,
+    Lab
+];
+
+export{CONSTRUCTIONS, Construction, Extension, Road, Lab, Link, Spawn, Storage, Terminal, Tower, Wall};

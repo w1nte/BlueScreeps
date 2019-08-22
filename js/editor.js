@@ -65,7 +65,7 @@ class Editor extends PIXI.utils.EventEmitter {
             this.stage.addChild(line);
 
             // camera
-            let camera = new Camera(this.app, this.stage);
+            const camera = new Camera(this.app, this.stage);
         }
     }
 
@@ -76,6 +76,8 @@ class Editor extends PIXI.utils.EventEmitter {
         this.instances.push(instance);
         this.stage.addChild(instance);
 
+        this.emit("update");
+
         return true;
     }
 
@@ -84,6 +86,15 @@ class Editor extends PIXI.utils.EventEmitter {
         if (index !== -1)
             this.instances.splice(index, 1);
         this.stage.removeChild(instance);
+
+        this.emit("update");
+    }
+
+    removeAll() {
+        const instances = this.instances.slice();
+        for (let i = 0; i < instances.length; i++) {
+            this.remove(instances[i]);
+        }
     }
 
     getGridPos(posX, posY) {

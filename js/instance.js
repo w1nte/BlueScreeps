@@ -30,8 +30,8 @@ class Instance extends PIXI.Graphics {
             .on('mousemove', this.onDragMove)
             .on('touchmove', this.onDragMove)
             .on('rightclick', (e) => {
-                editor.emit("update");
                 editor.remove(this);
+                editor.emit("update");
             });
     }
 
