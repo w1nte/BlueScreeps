@@ -422,19 +422,19 @@ button {
 
 .footer {
     display: flex;
+    height: 200px;
     flex-direction: column;
     margin-top: auto;
-    justify-content: flex-end;
     background-color: #2d2d2d;
     box-shadow: rgba(0, 0, 0, 0.2) 0 -4px 8px;
 }
 
 .footer-nav {
     height: 2rem;
+    box-sizing: content-box;
     background-color: #505050;
     border-top: solid 1px #606060;
     border-bottom: solid 1px black;
-    overflow: hidden;
 }
 
 .footer-nav .item {
@@ -473,7 +473,14 @@ button {
 
 .code-toolbar {
     width: 100%;
-    height: auto;
+    height: 100%;
+}
+
+div.code-toolbar > .toolbar a, div.code-toolbar > .toolbar button, div.code-toolbar > .toolbar span {
+    padding: 0.5rem 0.7rem;
+    margin-right: 1rem;
+    border: none;
+    box-shadow: none;
 }
 
 pre[class*="language-"] {
@@ -481,12 +488,69 @@ pre[class*="language-"] {
     border: none;
     box-shadow: none;
     width: 100%;
-    max-height: 200px;
+    height: 100%;
     overflow-y: scroll;
+    padding: 0;
+    margin: 0;
     font-size: 0.8em;
 }
 
 code[class*="language-"], pre[class*="language-"] {
-    border-radius: 0;
     text-shadow: none;
+}
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em;
+    letter-spacing: -1px;
+    background-color: #313335;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.line-numbers-rows > span {
+    pointer-events: none;
+    display: block;
+    counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: #787878;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #222222;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666666;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8a8a8a;
 }
