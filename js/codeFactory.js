@@ -30,26 +30,26 @@ class CodeFactory {
     }
 }
 
-// just a test
-class FileManager {
+// Todo: Refactor
+class Loader {
 
-    static unserialize(editor, string) {
+    static loadFromCode(editor, string) {
         let instancesList = [];
         let instances = string.match(new RegExp(/\[[A-Z_]*,\s?[0-9\-+\.]*,\s?[0-9\-+\.]*\]/gms));
 
         let constrMap = {};
         for (let i in Constructions.CONSTRUCTIONS) {
-            constrMap[Constructions.CONSTRUCTIONS[i].type] = Constructions.CONSTRUCTIONS[i].name;
+            constrMap[Constructions.CONSTRUCTIONS[i].type] = Constructions.CONSTRUCTIONS[i];
         }
 
         for (let i in instances) {
-            let className, x, y;
+            let constructorClass, x, y;
             let data = instances[i].trim().slice(1, instances[i].length-1).split(',');
-            className = constrMap[data[0]];
+            constructorClass = constrMap[data[0]];
             x = parseFloat(data[1]);
             y = parseFloat(data[2]);
 
-            const construct = new Constructions[className](editor);
+            const construct = new constructorClass(editor);
             construct.position.x = x * editor.GRID_BOX_SIZE;
             construct.position.y = y * editor.GRID_BOX_SIZE;
 
@@ -58,6 +58,53 @@ class FileManager {
 
         return instancesList;
     }
+
+    static serialize(editor) {
+        let serialized = "";
+
+        for (let i in editor.instances) {
+            let instance = editor.instances[i].constructor.id;
+            let {x, y} = editor.getGridPos(editor.instances[i].position.x, editor.instances[i].position.y);
+            x /= editor.GRID_BOX_SIZE;
+            y /= editor.GRID_BOX_SIZE;
+            let s = instance + "," + x + "," + y + ";";
+            serialized += s;
+        }
+
+        return window.btoa(serialized);
+    }
+
+    static unserialize(editor, string) {
+        let instancesList = [];
+        let serialized = window.atob(string);
+
+        let instances = serialized.split(";");
+        for (let i in instances) {
+            let constructorClass;
+            let p = instances[i].split(",");
+            let instance = parseInt(p[0]),
+                x = parseInt(p[1]),
+                y = parseInt(p[2]);
+
+            for (let j in Constructions.CONSTRUCTIONS) {
+                if (Constructions.CONSTRUCTIONS[j].id === instance) {
+                    constructorClass = Constructions.CONSTRUCTIONS[j];
+                    break;
+                }
+            }
+
+            if (constructorClass == null)
+                continue;
+
+            const construct = new constructorClass(editor);
+            construct.position.x = x * editor.GRID_BOX_SIZE;
+            construct.position.y = y * editor.GRID_BOX_SIZE;
+            instancesList.push(construct);
+        }
+
+
+        return instancesList;
+    }
 }
 
-export {CodeFactory, FileManager};
+export {CodeFactory, Loader};

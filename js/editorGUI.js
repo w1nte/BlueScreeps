@@ -33,7 +33,7 @@ class EditorGUI {
             let elm = document.createElement('a');
             elm.href = '#';
             elm.id = construct.type;
-            elm.innerHTML = '<span>' + construct.name + '</span>';
+            elm.innerHTML = '<span>' + construct.ingameName + '</span>';
 
             construct_buttons.push(elm);
 

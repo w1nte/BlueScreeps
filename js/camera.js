@@ -35,18 +35,23 @@ class Camera {
                 isDragging = false;
             });
 
-        app.view.addEventListener('mousewheel', (e) => {
+        const scrollEvent = (e) => {
             let mouse = app.renderer.plugins.interaction.mouse.global;
             if (mouse.x < 0 || mouse.x > app.screen.width || mouse.y < 0 || mouse.y > app.screen.height)
                 return;
 
-            e.preventDefault();
-
-            let dir = e.deltaY < 0 ? 1 : -1;
+            let dir = (e.deltaY || e.detail) < 0 ? 1 : -1;
             let factor = (1 + dir * 0.1);
 
             this.zoom(factor);
-        });
+        };
+
+        let mousewheelevt = (/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel";
+
+        if (document.attachEvent) //if IE (and Opera depending on user setting)
+            document.attachEvent("on"+mousewheelevt, scrollEvent);
+        else if (document.addEventListener) //WC3 browsers
+            document.addEventListener(mousewheelevt, scrollEvent, false);
     }
 
     setPosition(x, y) {

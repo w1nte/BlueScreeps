@@ -5,7 +5,7 @@ import * as Constructions from "./constructions.js";
 import {CodeFactory} from "./codeFactory.js";
 import {RoadDrawer} from "./roadDrawer.js";
 import {EditorGUI} from "./editorGUI.js";
-import {FileManager} from "./codeFactory.js";
+import {Loader} from "./codeFactory.js";
 
 const canvas = document.getElementById("canvas");
 const generateCodeButton = document.getElementById('generateCodeButton');
@@ -88,7 +88,7 @@ const main = () => {
         shareButton.onclick = (e) => {
             e.preventDefault();
             let elm = document.createElement("textarea");
-            elm.value = location.protocol + '//' + location.host + location.pathname + '?code=' + btoa(CodeFactory.generate(editor));
+            elm.value = location.protocol + '//' + location.host + location.pathname + '?code=' + Loader.serialize(editor);
             document.body.appendChild(elm);
             elm.focus();
             elm.select();
@@ -103,11 +103,11 @@ const main = () => {
             document.body.removeChild(elm);
         };
 
-    let unserializedData = FileManager.unserialize(editor, "[[STRUCTURE_EXTENSION, -7, -2], [STRUCTURE_EXTENSION, -7, -1], [STRUCTURE_EXTENSION, -7, 0], [STRUCTURE_EXTENSION, -7, 1], [STRUCTURE_EXTENSION, -7, 2],        [STRUCTURE_EXTENSION, -6, 0], [STRUCTURE_EXTENSION, -5, 0], [STRUCTURE_EXTENSION, -5, -1], [STRUCTURE_EXTENSION, -5, -2], [STRUCTURE_EXTENSION, -5, 1],        [STRUCTURE_EXTENSION, -5, 2], [STRUCTURE_EXTENSION, -3, -2], [STRUCTURE_EXTENSION, -3, -1], [STRUCTURE_EXTENSION, -3, 0], [STRUCTURE_EXTENSION, -3, 1],        [STRUCTURE_EXTENSION, -3, 2], [STRUCTURE_EXTENSION, -2, 2], [STRUCTURE_EXTENSION, -2, 0], [STRUCTURE_EXTENSION, -2, -2], [STRUCTURE_EXTENSION, 0, -2],        [STRUCTURE_EXTENSION, 0, -1], [STRUCTURE_EXTENSION, 0, 0], [STRUCTURE_EXTENSION, 0, 1], [STRUCTURE_EXTENSION, 0, 2], [STRUCTURE_EXTENSION, 1, 2],        [STRUCTURE_EXTENSION, 3, -2], [STRUCTURE_EXTENSION, 3, 0], [STRUCTURE_EXTENSION, 3, -1], [STRUCTURE_EXTENSION, 3, 1], [STRUCTURE_EXTENSION, 3, 2],        [STRUCTURE_EXTENSION, 4, 2], [STRUCTURE_EXTENSION, 6, -1], [STRUCTURE_EXTENSION, 6, 0], [STRUCTURE_EXTENSION, 6, 1], [STRUCTURE_EXTENSION, 7, 2],        [STRUCTURE_EXTENSION, 8, 1], [STRUCTURE_EXTENSION, 8, 0], [STRUCTURE_EXTENSION, 8, -1], [STRUCTURE_EXTENSION, 7, -2]]");
+    let unserializedData = Loader.loadFromCode(editor, "[[STRUCTURE_EXTENSION, -7, -2], [STRUCTURE_EXTENSION, -7, -1], [STRUCTURE_EXTENSION, -7, 0], [STRUCTURE_EXTENSION, -7, 1], [STRUCTURE_EXTENSION, -7, 2],        [STRUCTURE_EXTENSION, -6, 0], [STRUCTURE_EXTENSION, -5, 0], [STRUCTURE_EXTENSION, -5, -1], [STRUCTURE_EXTENSION, -5, -2], [STRUCTURE_EXTENSION, -5, 1],        [STRUCTURE_EXTENSION, -5, 2], [STRUCTURE_EXTENSION, -3, -2], [STRUCTURE_EXTENSION, -3, -1], [STRUCTURE_EXTENSION, -3, 0], [STRUCTURE_EXTENSION, -3, 1],        [STRUCTURE_EXTENSION, -3, 2], [STRUCTURE_EXTENSION, -2, 2], [STRUCTURE_EXTENSION, -2, 0], [STRUCTURE_EXTENSION, -2, -2], [STRUCTURE_EXTENSION, 0, -2],        [STRUCTURE_EXTENSION, 0, -1], [STRUCTURE_EXTENSION, 0, 0], [STRUCTURE_EXTENSION, 0, 1], [STRUCTURE_EXTENSION, 0, 2], [STRUCTURE_EXTENSION, 1, 2],        [STRUCTURE_EXTENSION, 3, -2], [STRUCTURE_EXTENSION, 3, 0], [STRUCTURE_EXTENSION, 3, -1], [STRUCTURE_EXTENSION, 3, 1], [STRUCTURE_EXTENSION, 3, 2],        [STRUCTURE_EXTENSION, 4, 2], [STRUCTURE_EXTENSION, 6, -1], [STRUCTURE_EXTENSION, 6, 0], [STRUCTURE_EXTENSION, 6, 1], [STRUCTURE_EXTENSION, 7, 2],        [STRUCTURE_EXTENSION, 8, 1], [STRUCTURE_EXTENSION, 8, 0], [STRUCTURE_EXTENSION, 8, -1], [STRUCTURE_EXTENSION, 7, -2]]");
     let url = new URL(window.location.href);
     let urlcode = url.searchParams.get("code");
     if (urlcode != null) {
-        unserializedData = FileManager.unserialize(editor, atob(urlcode));
+        unserializedData = Loader.unserialize(editor, urlcode);
     }
 
     for (let i in unserializedData) {
@@ -133,9 +133,7 @@ const main = () => {
     function resize() {
 
         // Get the p
-        const parent = app.view.parentNode.parentElement;
-
-        console.log(parent);
+        const parent = app.view.parentNode;
 
         // Resize the renderer
         app.renderer.resize(parent.clientWidth, parent.clientHeight);
