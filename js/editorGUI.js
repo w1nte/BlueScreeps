@@ -25,17 +25,23 @@ class EditorGUI {
     generateGUI(elementId) {
         const self = this;
 
+        const construct_buttons = [];
+
         let gui_sel = document.getElementById(elementId);
         for (let i = 0; i < self.constructions.length; i++) {
             let construct = self.constructions[i];
             let elm = document.createElement('a');
             elm.href = '#';
             elm.id = construct.type;
-            elm.innerHTML = construct.name;
+            elm.innerHTML = '<span>' + construct.ingameName + '</span>';
+
+            construct_buttons.push(elm);
 
             gui_sel.append(elm);
             elm.onclick = (e) => {
                 self.selectedElement = construct;
+                construct_buttons.map((elm) => {elm.className = elm.className.replace(" current", "")});
+                elm.className += " current";
             };
         }
 

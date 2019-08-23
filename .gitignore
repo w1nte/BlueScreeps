@@ -63,6 +63,7 @@ typings/
 .next
 
 !vendor/prism.js
+!vendor/prism-line-numbers.js
 vendor/
 !dist/vendor
 css/app.css

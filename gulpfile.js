@@ -11,7 +11,9 @@ const   gulp             = require('gulp'),
         stripCssComments = require('gulp-strip-css-comments'),
         cssbeautify      = require('gulp-cssbeautify'),
         htmlmin          = require('gulp-htmlmin'),
-        jsmin            = require('gulp-uglify');
+        jsmin            = require('gulp-uglify'),
+        babel            = require('gulp-babel'),
+        webpack          = require('webpack-stream');
 
 /* Record total task time */
 taskTime.init();
@@ -66,7 +68,7 @@ gulp.task('build', ['clean', 'install', 'scss-dist'], () => {
         .pipe(gulp.dest('dist'));
     // minify and copy js
     gulp.src(['js/**/*'])
-    //.pipe(jsmin())
+        .pipe(webpack(require('./.webpack.config.js')))
         .pipe(gulp.dest('dist/js'));
     // just copying
     gulp.src([
