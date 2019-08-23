@@ -34,6 +34,7 @@ const main = () => {
     const updateCode = () => {
         code.innerHTML = CodeFactory.generate(editor);
         Prism.highlightElement(code);
+        console.log("update code");
     };
 
     editorGUI.addConstructs(Constructions.CONSTRUCTIONS);
@@ -44,8 +45,6 @@ const main = () => {
     app.view.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
-
-    window.onload = (e) => updateCode();
 
     if (generateCodeButton != null)
         generateCodeButton.onclick = (e) => {
@@ -71,9 +70,15 @@ const main = () => {
             editor.camera.zoom(0.9);
         };
 
+    let debounceUpdate;
     editor.on('update', () => {
-        roadDrawer.draw();
-        updateCode();
+        if (debounceUpdate != null)
+            clearInterval(debounceUpdate);
+        debounceUpdate = setInterval(() => {
+            roadDrawer.draw();
+            updateCode();
+            clearInterval(debounceUpdate);
+        }, 50);
     });
 
     // if (loadButton != null)
