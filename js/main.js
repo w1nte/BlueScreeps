@@ -19,6 +19,8 @@ const zoomOutButton = document.getElementById('zoomOut');
 const main = () => {
 
     const app = new PIXI.Application({
+        height: 1,
+        width: 1,
         transparent: true,
         resolution: window.devicePixelRatio || 1,
         autoResize: true,

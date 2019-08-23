@@ -218,6 +218,16 @@ body {
     overflow: hidden;
 }
 
+@media (max-height: 800px) {
+    html {
+        font-size: 14px;
+    }
+
+    body {
+        font-size: 13px;
+    }
+}
+
 body, html {
     color: white;
     background: #212121;
@@ -300,10 +310,10 @@ button {
 
 .main {
     display: flex;
+    flex: 1;
     position: relative;
     flex-direction: row;
     align-items: stretch;
-    flex: 4;
 }
 
 .main #canvas {
@@ -413,7 +423,8 @@ button {
 .footer {
     display: flex;
     flex-direction: column;
-    flex: 1 50px;
+    margin-top: auto;
+    justify-content: flex-end;
     background-color: #2d2d2d;
     box-shadow: rgba(0, 0, 0, 0.2) 0 -4px 8px;
 }
