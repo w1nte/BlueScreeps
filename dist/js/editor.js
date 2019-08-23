@@ -30,16 +30,11 @@ class Editor extends PIXI.utils.EventEmitter {
             this.mode = 0;
 
             // background
-            let tiling_size = 100000;
-            let tiling = new PIXI.TilingSprite(PIXI.Texture.from("./assets/bg.jpg"), tiling_size, tiling_size);
-            tiling.position.set(-tiling_size / 2, -tiling_size / 2);
+            let tiling_size = 49 * this.GRID_BOX_SIZE;
+            let texture = PIXI.Texture.from("./assets/bg.jpg");
+            let tiling = new PIXI.TilingSprite(texture, tiling_size, tiling_size);
+            tiling.position.set(-tiling.width / 2 + this.GRID_BOX_SIZE / 2, -tiling.height / 2 + this.GRID_BOX_SIZE / 2);
             this.stage.addChild(tiling);
-
-            // coordinates
-            let coordinates = new PIXI.Text('', {fontFamily: 'Yanone Kaffeesatz, Arial', fontSize: 13, fill: 0xFFFFFF, align: 'left'});
-            coordinates.position.x = 10;
-            coordinates.position.y = 10;
-            app.stage.addChild(coordinates);
 
             // cursor
             let buildBlock = new PIXI.Graphics();
@@ -52,7 +47,7 @@ class Editor extends PIXI.utils.EventEmitter {
                 let {x, y} = self.getGridPos(self.stage.toLocal(e.data.global).x, self.stage.toLocal(e.data.global).y);
                 buildBlock.position.x = x;
                 buildBlock.position.y = y;
-                coordinates.text = "X: " + x / self.GRID_BOX_SIZE + " Y: " + y / self.GRID_BOX_SIZE;
+                //coordinates.text = "X: " + x / self.GRID_BOX_SIZE + " Y: " + y / self.GRID_BOX_SIZE;
             });
 
             // zero line
@@ -65,7 +60,9 @@ class Editor extends PIXI.utils.EventEmitter {
             this.stage.addChild(line);
 
             // camera
-            const camera = new Camera(this.app, this.stage);
+            this.camera = new Camera(this.app, this.stage);
+
+            this.camera.setPosition(0, 0);
         }
     }
 

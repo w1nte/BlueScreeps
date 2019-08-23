@@ -1,0 +1,28 @@
+
+body, html {
+  font-family: $font-family;
+}
+
+@mixin link($color) {
+  &, &:link, &:visited {
+    text-decoration: none;
+    color: $color;
+    font-weight: $font-weight-normal;
+  }
+}
+
+a {
+  @include link($primary-color);
+
+  &:hover {
+    color: lighten($primary-color, 5%);
+  }
+}
+
+.item a {
+  @include link($items-text-color);
+
+  &:hover {
+    color: lighten($items-text-color, 15%);
+  }
+}

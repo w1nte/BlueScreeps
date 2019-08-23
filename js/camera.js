@@ -2,6 +2,9 @@
 
 class Camera {
     constructor(app, stage) {
+        this.app = app;
+        this.stage = stage;
+
         let isDragging = false,
             prevX,
             prevY;
@@ -42,28 +45,37 @@ class Camera {
             let dir = e.deltaY < 0 ? 1 : -1;
             let factor = (1 + dir * 0.1);
 
-            let beforeTransform = stage.toLocal(app.renderer.plugins.interaction.mouse.global);
-
-            stage.scale.x *= factor;
-            stage.scale.y *= factor;
-
-            if (stage.scale.x >= 2) {
-                stage.scale.x = 2;
-                stage.scale.y= 2;
-            }
-
-            if (stage.scale.x <= 0.5) {
-                stage.scale.x = 0.5;
-                stage.scale.y = 0.5;
-            }
-
-            stage.updateTransform();
-            let afterTransform = stage.toLocal(app.renderer.plugins.interaction.mouse.global);
-
-            stage.position.x += (afterTransform.x - beforeTransform.x) * stage.scale.x;
-            stage.position.y += (afterTransform.y - beforeTransform.y) * stage.scale.y;
-            stage.updateTransform();
+            this.zoom(factor);
         });
+    }
+
+    setPosition(x, y) {
+        this.stage.position.x = x + (this.app.renderer.width * this.stage.scale.x) / 2;
+        this.stage.position.y = y + (this.app.renderer.height * this.stage.scale.y) / 2;
+    }
+
+    zoom(factor) {
+        let beforeTransform = this.stage.toLocal(this.app.renderer.plugins.interaction.mouse.global);
+
+        this.stage.scale.x *= factor;
+        this.stage.scale.y *= factor;
+
+        if (this.stage.scale.x >= 2) {
+            this.stage.scale.x = 2;
+            this.stage.scale.y= 2;
+        }
+
+        if (this.stage.scale.x <= 0.2) {
+            this.stage.scale.x = 0.2;
+            this.stage.scale.y = 0.2;
+        }
+
+        this.stage.updateTransform();
+        let afterTransform = this.stage.toLocal(this.app.renderer.plugins.interaction.mouse.global);
+
+        this.stage.position.x += (afterTransform.x - beforeTransform.x) * this.stage.scale.x;
+        this.stage.position.y += (afterTransform.y - beforeTransform.y) * this.stage.scale.y;
+        this.stage.updateTransform();
     }
 
 }
